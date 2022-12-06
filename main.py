@@ -11,9 +11,9 @@
 """
 from pathlib import Path
 from docxtpl import DocxTemplate
+from random import randint
 
-
-def checking_templates():
+def checking_templates() -> None:
     """Проверяем наличие шаблонов в директории template."""
     template = ['report_tpl.docx', 'statement_tpl.docx']
 
@@ -31,6 +31,7 @@ def checking_templates():
 
 def statement():
     """
+    В РАЗРАБОТКЕ
     Генерируем документ (ведомость) с данными.
     Считываем шаблон и вводим данные.
     name_item_1 - наименование предмета.
@@ -50,26 +51,52 @@ def statement():
     doc.save('statement_tpl_final.docx')
 
 
-def set_report():
+def set_report(data: dict) -> None:
     """Генерирует отчет по шаблону report_tpl.docx"""
 
     doc = DocxTemplate('template/report_tpl.docx')
+
+    name_item = []
+
+    # Сюда данные приходят извне.
     contex = {
-        'post': 'Начальник',
-        'title': 'полковник',
-        'full_name': 'С.Д. Кольтяпин',
-        'position_person': 'Начальник ОМТиХО',
-        'title_person': 'майор полиции',
-        'full_name_person': 'Е.Ю. Еламков',
-        'evnt_date': '05.12.2022'
+        'post': data['post'],
+        'title': data['title'],
+        'full_name': data['full_name'],
+        'position_person': data['position_person'],
+        'title_person': data['title_person'],
+        'full_name_person': data['full_name_person'],
+        'evnt_date': '05.12.2022',
+        'name_item': name_item
     }
     doc.render(contex)
     doc.save('report_tpl_final.docx')
 
 
+def set_data() -> dict:
+    """Ввод тестовых данных"""
+    post = ['Начальник', 'Заместитель начальника', 'Врио начальника']
+    title = ['полковник полиции', 'подполковник полиции']
+    full_name = ['И.И. Иванов', 'П.П. Петров']
+    position_person = ['Начальник ОМТиХО']
+    title_person = ['майор полиции', 'капитан полиции']
+    full_name_person = ['С.С. Сидоров', 'А.А. Александров']
+    dict_data = {
+        'post': post,
+        'title': title,
+        'full_name': full_name,
+        'position_person': position_person,
+        'title_person': title_person,
+        'full_name_person': full_name_person,
+    }
+    return dict_data
+
+
 def main():
+    # print(set_data())
     checking_templates()
-    # set_report()
+    data = set_data()
+    set_report(data)
     # statement()
 
 
